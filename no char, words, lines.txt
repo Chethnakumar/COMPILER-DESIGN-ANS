@@ -1,0 +1,43 @@
+no char, words, lines
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#define IN 1
+#define OUT 0
+void countCharactersWordsLines(FILE *file) {
+    int charCount = 0, wordCount = 0, lineCount = 0;
+    int state = OUT;
+    char c;
+    while ((c = fgetc(file)) != EOF) {
+        charCount++;
+        if (c == '\n') {
+            lineCount++;
+        }
+        if (isspace(c)) {
+            state = OUT;
+        } else if (state == OUT) {
+            state = IN;
+            wordCount++;
+        }
+    }
+    if (c != '\n') {
+        lineCount++;
+    }
+    printf("Number of characters: %d\n", charCount);
+    printf("Number of words: %d\n", wordCount);
+    printf("Number of lines: %d\n", lineCount);
+}
+int main() {
+    FILE *file;
+    char filename[100];
+    printf("Enter the filename: ");
+    scanf("%s", filename);
+    file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return 1;
+    }
+    countCharactersWordsLines(file);
+    fclose(file);
+    return 0;
+}

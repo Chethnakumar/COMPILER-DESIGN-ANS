@@ -1,0 +1,61 @@
+comment or not 
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+#define MAXLEN 50
+int iswhitespace(char ch)
+{
+	return(ch==' ' || ch=='\t' || ch=='\n');
+}
+int main()
+{
+	char ip[MAXLEN];
+	printf("enter code: \n");
+	while(fgets(ip, MAXLEN, stdin)!= NULL)
+	{
+		int len = strlen(ip);
+		int i = 0;
+		int comment = 0;
+		while(i<len)
+		{
+			if(ip[i]=='/' && ip[i+1]=='/')
+			{
+				comment = 1;
+				break;
+			}
+			else if(ip[i]=='/' && ip[i+1]=='*')
+			{
+				comment = 1;
+				i = i+2;
+				while(i<len-1)
+				{
+					if(ip[i]=='*' && ip[i+1]=='/')
+					{
+						comment = 1;
+						break;
+					}
+					i++;
+				}
+				break;
+			}
+			else if(iswhitespace(ip[i]))
+			{
+				i++;
+			}
+			else
+			{
+				comment = 0;
+				break;
+			}
+		}
+		if(comment)
+		{
+			printf("comment line: %s", ip);
+		}
+		else
+		{
+			printf("not comment line: %s", ip);
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,55 @@
+eliminate left recursion
+#include <stdio.h>
+#include <string.h>
+#define MAX_RULES 10
+#define MAX_LEN 20
+struct Production {
+    char nonTerminal;
+    char expressions[MAX_RULES][MAX_LEN];
+    int exprCount;
+};
+void eliminateLeftRecursion(struct Production* production, int index) {
+    char alpha[MAX_LEN], beta[MAX_LEN];
+    int alphaCount = 0, betaCount = 0;
+    char nonTerminal = production[index].nonTerminal;
+    int exprCount = production[index].exprCount;
+    int i;
+    for (i = 0; i < exprCount; i++) {
+        if (production[index].expressions[i][0] == nonTerminal) {
+            strcpy(alpha + alphaCount, production[index].expressions[i] + 1);
+            alphaCount += strlen(production[index].expressions[i]) - 1;
+            alpha[alphaCount++] = '|';
+        } else {
+            strcpy(beta + betaCount, production[index].expressions[i]);
+            betaCount += strlen(production[index].expressions[i]);
+            beta[betaCount++] = '|';
+        }
+    }
+    alpha[--alphaCount] = '\0';
+    beta[--betaCount] = '\0';
+    printf("%c -> %s%c'\n", nonTerminal, beta, nonTerminal);
+    printf("%c' -> %s%c' | epsilon\n", nonTerminal, alpha, nonTerminal);
+}
+int main() {
+    struct Production productions[MAX_RULES];
+    int numProductions;
+    printf("Enter the number of productions: ");
+    scanf("%d", &numProductions);
+    int i;
+    for (i = 0; i < numProductions; i++) {
+        printf("Enter non-terminal for production %d: ", i + 1);
+        scanf(" %c", &productions[i].nonTerminal);
+        printf("Enter the number of expressions for this non-terminal: ");
+        scanf("%d", &productions[i].exprCount);
+        printf("Enter expressions (separated by space) for this non-terminal:\n");
+        int j;
+        for (j = 0; j < productions[i].exprCount; j++) {
+            scanf("%s", productions[i].expressions[j]);
+        }
+    }
+    printf("\nAfter eliminating left recursion:\n");
+    for (i = 0; i < numProductions; i++) {
+        eliminateLeftRecursion(productions, i);
+    }
+    return 0;
+}

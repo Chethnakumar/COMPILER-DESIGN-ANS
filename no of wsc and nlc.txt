@@ -1,0 +1,20 @@
+no of wsc and nlc
+#include <stdio.h>
+int main() {
+    char input[1000]; 
+    int whitespaceCount = 0;
+    int newlineCount = 0;
+    printf("Enter some text (max 999 characters): ");
+    fgets(input, sizeof(input), stdin);
+    int i;
+    for (i = 0; input[i] != '\0'; i++) {
+        if (input[i] == ' ' || input[i] == '\t') {
+            whitespaceCount++;
+        } else if (input[i] == '\n') {
+            newlineCount++;
+        }
+    }
+    printf("Number of whitespaces: %d\n", whitespaceCount);
+    printf("Number of newline characters: %d\n", newlineCount);
+    return 0;
+}

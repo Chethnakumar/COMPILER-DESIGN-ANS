@@ -1,0 +1,49 @@
+eliminate common subexpr
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define MAX_EXPR_LENGTH 100
+typedef struct {
+    char expr[MAX_EXPR_LENGTH];
+    char result[MAX_EXPR_LENGTH];
+} Expression;
+int areIdentical(Expression* expr1, Expression* expr2) {
+    return strcmp(expr1->expr, expr2->expr) == 0;
+}
+void eliminateCommonSubexpression(Expression* expressions, int numExpressions) {
+    int i, j;
+    for (i = 0; i < numExpressions; i++) {
+        if (expressions[i].result[0] != '\0') {
+            for (j = i + 1; j < numExpressions; j++) {
+                if (expressions[j].result[0] != '\0' && areIdentical(&expressions[i], &expressions[j])) {
+                    expressions[j].result[0] = '\0'; 
+                }
+            }
+        }
+    }
+    printf("Optimized Expressions after Common Subexpression Elimination:\n");
+    for (i = 0; i < numExpressions; i++) {
+        if (expressions[i].result[0] != '\0') {
+            printf("%s = %s\n", expressions[i].result, expressions[i].expr);
+        }
+    }
+}
+int main() {
+    Expression expressions[] = {
+        {"a + b", "x"},
+        {"c * d", "y"},
+        {"a + b", "z"},
+        {"e / f", "w"},
+        {"a + b", "k"},
+        {"c * d", "m"},
+        {"e / f", "n"}
+    };
+    int numExpressions = sizeof(expressions) / sizeof(expressions[0]);
+    printf("Original Expressions:\n");
+    int i;
+    for ( i = 0; i < numExpressions; i++) {
+        printf("%s = %s\n", expressions[i].result, expressions[i].expr);
+    }
+    eliminateCommonSubexpression(expressions, numExpressions);
+    return 0;
+}

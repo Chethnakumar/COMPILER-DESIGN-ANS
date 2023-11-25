@@ -1,0 +1,48 @@
+grammar or not
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+void skipWhitespace(const char **input) {
+    while (**input && isspace(**input)) {
+        (*input)++;
+    }
+}
+int matchWord(const char **input, const char *word) {
+    skipWhitespace(input);
+    size_t wordLen = strlen(word);
+    if (strncmp(*input, word, wordLen) == 0 && !isalpha((*input)[wordLen])) {
+        (*input) += wordLen;
+        return 1; 
+    }
+    return 0; 
+}
+int parseSubject(const char **input) {
+    return matchWord(input, "I") || matchWord(input, "You") || matchWord(input, "He") ||
+           matchWord(input, "She") || matchWord(input, "They");
+}
+int parseVerb(const char **input) {
+    return matchWord(input, "play") || matchWord(input, "eat") ||
+           matchWord(input, "run") || matchWord(input, "sleep");
+}
+int parseObject(const char **input) {
+    return matchWord(input, "football") || matchWord(input, "games") ||
+           matchWord(input, "music") || matchWord(input, "apples");
+}
+int parseSentence(const char **input) {
+    return parseSubject(input) && parseVerb(input) && parseObject(input);
+}
+int validateSentence(const char *input) {
+    return parseSentence(&input);
+}
+int main() {
+    char input[100];
+    printf("Enter a sentence: ");
+    fgets(input, sizeof(input), stdin);
+    int isValid = validateSentence(input);
+    if (isValid) {
+        printf("The input forms a valid sentence according to the grammar.\n");
+    } else {
+        printf("The input does not form a valid sentence according to the grammar.\n");
+    }
+    return 0;
+}

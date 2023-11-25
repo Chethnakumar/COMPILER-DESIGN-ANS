@@ -1,0 +1,59 @@
+three address code
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+int tempCounter = 1;
+typedef struct {
+    char result[5];
+    char op;
+    char arg1[5];
+    char arg2[5];
+} ThreeAddressCode;
+char* newTemp() {
+    char* temp = (char*)malloc(5 * sizeof(char));
+    snprintf(temp, 5, "t%d", tempCounter++);
+    return temp;
+}
+void generateThreeAddressCode(const char* expression) {
+    ThreeAddressCode code[20];
+    int codeIndex = 0;
+    int len = strlen(expression);
+    int i;
+    for (i= 0; i < len; i++) {
+        if (expression[i] == '+' || expression[i] == '-' || expression[i] == '*' || expression[i] == '/') {
+            code[codeIndex].op = expression[i];
+            code[codeIndex].arg1[0] = '\0';
+            code[codeIndex].arg2[0] = '\0';
+            if (i - 2 >= 0 && isalnum(expression[i - 2])) {
+                code[codeIndex].arg1[0] = expression[i - 2];
+                code[codeIndex].arg1[1] = '\0';
+            } else {
+                code[codeIndex].arg1[0] = expression[i - 1];
+                code[codeIndex].arg1[1] = '\0';
+            }
+            if (i + 2 < len && isalnum(expression[i + 2])) {
+                code[codeIndex].arg2[0] = expression[i + 2];
+                code[codeIndex].arg2[1] = '\0';
+            } else {
+                code[codeIndex].arg2[0] = expression[i + 1];
+                code[codeIndex].arg2[1] = '\0';
+            }
+            code[codeIndex].result[0] = newTemp()[0];
+            code[codeIndex].result[1] = '\0';
+            codeIndex++;
+        }
+    }
+    printf("Three Address Code:\n");
+    for (i = 0; i < codeIndex; i++) {
+        printf("%s = %s %c %s\n", code[i].result, code[i].arg1, code[i].op, code[i].arg2);
+    }
+}
+int main() {
+    char expression[100]; 
+    printf("Enter an arithmetic expression (e.g., a + b * c - d / e): ");
+    fgets(expression, sizeof(expression), stdin);
+    expression[strcspn(expression, "\n")] = '\0'; 
+    generateThreeAddressCode(expression);
+    return 0;
+}

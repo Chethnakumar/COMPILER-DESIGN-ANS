@@ -1,0 +1,41 @@
+identifier valid or not
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+#define MAXLEN 50
+int isvalid(char* id)
+{
+	int len = strlen(id);
+	if(len==0)
+	{
+		return 0;
+	}
+	if(!isalpha(id[0]) && id[0]!='_')
+	{
+		return 0;
+	}
+	int i;
+	for(i=1;i<len;i++)
+	{
+		if(!isalnum(id[i]) && id[i]!='_')
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+int main()
+{
+	char ip[MAXLEN];
+	printf("enter: \n");
+	scanf("%s",ip);
+	if(isvalid(ip))
+	{
+		printf("valid \n");
+	}
+	else
+	{
+		printf("invalid \n");
+	}
+	return 0;
+}
