@@ -1,0 +1,29 @@
+LEX frequency of word
+%{
+    #define MAX_WORDS 100
+    int word_count = 0;
+    char target_word[50];  // Maximum word length assumed as 50
+    int frequency = 0;
+    char words[MAX_WORDS][50]; // Array to store words, assuming a maximum of 100 words with 50 characters each
+%}
+
+%%
+[a-zA-Z]+   {
+                strcpy(words[word_count], yytext);
+                if(strcmp(yytext, target_word) == 0)
+                    frequency++;
+                word_count++;
+            }
+.           ;
+
+%%
+
+int main() {
+    printf("Enter a sentence: ");
+    scanf("%[^\n]s", target_word);
+
+    yylex();
+    
+    printf("Frequency of '%s' in the sentence: %d\n", target_word, frequency);
+    return 0;
+}

@@ -1,0 +1,38 @@
+LEX replace word
+%{
+    #include <stdio.h>
+    #include <string.h>
+%}
+
+%%
+\"your_word_to_replace\"   { fprintf(yyout, "word_to_replace_with"); }
+.                          { fprintf(yyout, "%s", yytext); }
+%%
+
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        printf("Usage: %s input_file output_file word_to_replace word_to_replace_with\n", argv[0]);
+        return 1;
+    }
+
+    FILE *input = fopen(argv[1], "r");
+    FILE *output = fopen(argv[2], "w");
+
+    if (input == NULL || output == NULL) {
+        perror("Error");
+        return 1;
+    }
+
+    yyin = input;
+    yyout = output;
+
+    // Set the word to be replaced
+    strcpy(yytext, argv[3]);
+
+    yylex();
+
+    fclose(input);
+    fclose(output);
+
+    return 0;
+}

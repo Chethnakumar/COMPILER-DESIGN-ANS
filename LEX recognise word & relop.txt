@@ -1,0 +1,17 @@
+LEX recognise word & relop
+%{
+    #include <stdio.h>
+%}
+
+%%
+[a-zA-Z]+("=="|"!="|"<="|">="|"<"|">") {
+    printf("Word followed by a relational operator: %s\n", yytext);
+}
+. ;
+
+%%
+
+int main() {
+    yylex();
+    return 0;
+}
